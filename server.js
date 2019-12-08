@@ -40,17 +40,6 @@ app.get('/api', (req, res) => {
   });
 });
 
-//Nicole:
-/*
-This statement is for follow_up_date
-SELECT follow_up_date FROM members_events WHERE follow_up_date > NOW() AND follow_up_date < DATE_ADD(
-NOW(), INTERVAL 7 DAY);
-  
-This statement is for birthdays
-SELECT birthday FROM members WHERE DATE_FORMAT(members.birthday, '%m-%d') BETWEEN DATE_FORMAT(NOW(), '%m-%d') 
-AND DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), '%m-%d');
-*/
-
 app.post('/addMember', (req, res) =>{
   var values = req.body;
   connection.query('INSERT INTO members SET ?', values, function (error, results, fields) {
@@ -159,18 +148,6 @@ app.post('/promoterole/:id/:date', (req, res) =>{
   })
 });
 
-// app.get('/notificationCom/:id', (req, res) => {
-//   //console.log("req.params",req.params);
-//   connection.query("SELECT * FROM members_events WHERE communication_date > NOW() AND communication_date < DATE_ADD( NOW(), INTERVAL 7 DAY) AND users_id = ?", req.params.id ,function (err, result, fields){
-//     if (err) {
-//       console.log("notification err", err);
-//     }else {
-//     var all_com = result;
-//     //console.log("all_com",all_com)
-//     res.json(all_com);
-//     }
-//   });
-// });
 app.get('/notificationFollowUp/:id', (req, res) => {
   //console.log("req.params",req.params);
   connection.query("SELECT * FROM notification_follow_up WHERE users_id = ?",req.params.id, function (err, result, fields){
@@ -183,6 +160,7 @@ app.get('/notificationFollowUp/:id', (req, res) => {
     }
   });
 });
+
 app.get('/notificationBirthday', (req, res) => {
   //console.log("req.params",req.params);
   connection.query(" SELECT * FROM notification_birthday", function (err, result, fields){
@@ -195,6 +173,7 @@ app.get('/notificationBirthday', (req, res) => {
     }
   });
 });
+
 app.get('/notificationMarriage', (req, res) => {
   //console.log("req.params",req.params);
   connection.query(" SELECT * FROM notification_marriage", function (err, result, fields){
@@ -207,6 +186,7 @@ app.get('/notificationMarriage', (req, res) => {
     }
   });
 });
+
 app.get('/notificationBaptism', (req, res) => {
   //console.log("req.params",req.params);
   connection.query(" SELECT * FROM notification_baptism", function (err, result, fields){
@@ -228,6 +208,7 @@ app.get('/viewcommunication/:id/:userid', (req, res) => {
     res.json(all_com);
   });
 });
+
 app.post('/addcommunication', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -243,6 +224,7 @@ app.post('/addcommunication', (req, res) =>{
     console.log("Exiting function")
   })
 });
+
 app.post('/deletecommunication/:id', (req, res) => {
   console.log(req.params);
   var values = req.body;
@@ -256,6 +238,7 @@ app.post('/deletecommunication/:id', (req, res) => {
     }
   });
 });
+
 app.post('/editcommunication/:id', (req, res) => {
   //console.log(req.params);
   var values = req.body;
@@ -278,6 +261,7 @@ app.get('/viewrole/:id', (req, res) => {
     res.json(all_roles);
   });
 });
+
 app.post('/editrole/:id', (req, res) => {
   //console.log(req.params);
   var values = req.body;
@@ -291,6 +275,7 @@ app.post('/editrole/:id', (req, res) => {
     }
   });
 });
+
 app.post('/deleterole/:id', (req, res) => {
   console.log(req.params);
   var values = req.body;
@@ -304,6 +289,7 @@ app.post('/deleterole/:id', (req, res) => {
     }
   });
 });
+
 app.post('/addrole', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -332,6 +318,7 @@ app.get('/viewbaptism/:id', (req, res) => {
     }
   });
 });
+
 app.post('/addbaptism', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -347,6 +334,7 @@ app.post('/addbaptism', (req, res) =>{
     console.log("Exiting function")
   })
 });
+
 app.post('/editbaptism/:id', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -374,6 +362,7 @@ app.get('/viewconfirmation/:id', (req, res) => {
     }
   });
 });
+
 app.post('/addconfirmation', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -389,6 +378,7 @@ app.post('/addconfirmation', (req, res) =>{
     console.log("Exiting function")
   })
 });
+
 app.post('/editconfirmation/:id', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -420,6 +410,7 @@ app.post('/editcurrentmarriage/:id', (req, res) =>{
     console.log("Exiting function")
   })
 });
+
 app.post('/addcurrentmarriage', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -435,6 +426,7 @@ app.post('/addcurrentmarriage', (req, res) =>{
     console.log("Exiting function")
   })
 });
+
 app.get('/viewmarriage/:id', (req, res) => {
   //console.log(req.params);
   connection.query("SELECT * FROM members_marriage WHERE members_id = ?",[req.params.id], function (err, result, fields){
@@ -454,6 +446,7 @@ app.get('/viewpremarriage/:id', (req, res) => {
     res.json(premar);
   });
 });
+
 app.post('/addpremar', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -468,6 +461,7 @@ app.post('/addpremar', (req, res) =>{
     console.log("Exiting function")
   })
 });
+
 app.post('/editpremar/:id', (req, res) =>{
   var values = req.body;
   console.log(req.params,values)
@@ -482,6 +476,7 @@ app.post('/editpremar/:id', (req, res) =>{
     console.log("Exiting function")
   })
 });
+
 app.post('/deletepremar/:id', (req, res) => {
   console.log(req.params);
   var values = req.body;
@@ -504,6 +499,7 @@ app.get('/editMember/:id', (req, res) => {
     res.json(member[0]);
   });
 });
+
 app.post('/editMember/:id', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -516,6 +512,7 @@ app.post('/editMember/:id', (req, res) =>{
   console.log("EXITING FUNCTION")
   });
 });
+
 app.get('/editMember/:id/sacrament', (req, res) => {
   //console.log(req.params);
   connection.query("SELECT * FROM members WHERE members_id = ?",[req.params.id], function (err, result, fields){
@@ -533,6 +530,7 @@ app.get('/memberReport/:id', (req, res) => {
     res.json(member[0]);
   });
 });
+
 app.get('/communicationReport/:id', (req, res) => {
   //console.log(req.params);
   connection.query("SELECT * FROM members WHERE members_id = ?",[req.params.id], function (err, result, fields){
@@ -541,6 +539,7 @@ app.get('/communicationReport/:id', (req, res) => {
     res.json(member[0]);
   });
 });
+
 app.get('/manageReport/:subrole', (req, res) => {
   //console.log(req.params);
   connection.query("SELECT COUNT(*) AS number FROM members_sub_roles WHERE sub_roles_id = ? AND status = 'A'",[req.params.subrole], function (err, result, fields){
@@ -549,6 +548,7 @@ app.get('/manageReport/:subrole', (req, res) => {
     res.json(number);
   });
 });
+
 app.get('/manageReport', (req, res) => {
   //console.log(req.params);
   connection.query("SELECT COUNT(*) AS number FROM members_sub_roles WHERE roles_id = 'INI' AND status = 'A'", function (err, result, fields){
