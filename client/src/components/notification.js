@@ -15,37 +15,37 @@ export default class Notification extends Component {
   }
 
   componentDidMount() {
-    fetch('/notification/'+fakeAuth.user_id,)
-      .then(res => res.json())
-      .then(all_com => this.setState({all_com}
-      ,()=>{
-        if (Object.getOwnPropertyNames(this.state.all_com).length > 0){
-          //console.log("inside length>0")
-          for (var i = 0; i < this.state.all_com.length; i++){
-            var array = this.state.myArray;
-            if (this.state.all_com[i].communication_date != 'Invalid date' && this.state.all_com[i].communication_date != ''){
-              array.push({
-                members_id:this.state.all_com[i].members_id,
-                type:"Communication",
-                members_name: this.state.all_com[i].members_id,
-                date:this.state.all_com[i].communication_date,
-              })
-            }
-            //console.log(this.state.all_com[i].follow_up_date,this.state.all_com[i].follow_up_date !== 'Invalid date' && this.state.all_com[i].follow_up_date !== '')
-            // if (this.state.all_com[i].follow_up_date !== 'Invalid date' && this.state.all_com[i].follow_up_date !== ''){
-            //   array.push({
-            //     type:"Follow Up",
-            //     members_id: this.state.all_com[i].members_id,
-            //     date:this.state.all_com[i].follow_up_date,
-            //   })
-            // }
-            //console.log("i", array);
-            this.setState({ myArray:array});
-          }
-        }
-      }));
+    // fetch('/notification/'+fakeAuth.user_id,)
+    //   .then(res => res.json())
+    //   .then(all_com => this.setState({all_com}
+    //   ,()=>{
+    //     if (Object.getOwnPropertyNames(this.state.all_com).length > 0){
+    //       //console.log("inside length>0")
+    //       for (var i = 0; i < this.state.all_com.length; i++){
+    //         var array = this.state.myArray;
+    //         if (this.state.all_com[i].communication_date != 'Invalid date' && this.state.all_com[i].communication_date != ''){
+    //           array.push({
+    //             members_id:this.state.all_com[i].members_id,
+    //             type:"Communication",
+    //             members_name: this.state.all_com[i].members_id,
+    //             date:this.state.all_com[i].communication_date,
+    //           })
+    //         }
+    //         //console.log(this.state.all_com[i].follow_up_date,this.state.all_com[i].follow_up_date !== 'Invalid date' && this.state.all_com[i].follow_up_date !== '')
+    //         // if (this.state.all_com[i].follow_up_date !== 'Invalid date' && this.state.all_com[i].follow_up_date !== ''){
+    //         //   array.push({
+    //         //     type:"Follow Up",
+    //         //     members_id: this.state.all_com[i].members_id,
+    //         //     date:this.state.all_com[i].follow_up_date,
+    //         //   })
+    //         // }
+    //         //console.log("i", array);
+    //         this.setState({ myArray:array});
+    //       }
+    //     }
+    //   }));
 
-      fetch('/notification2/'+fakeAuth.user_id)
+      fetch('/notificationFollowUp/'+fakeAuth.user_id)
       .then(res => res.json())
       .then(all_com2 => this.setState({all_com2}
       ,()=>{
@@ -57,8 +57,9 @@ export default class Notification extends Component {
             if (this.state.all_com2[i].follow_up_date !== 'Invalid date' && this.state.all_com2[i].follow_up_date !== ''){
               array.push({
                 members_id:this.state.all_com2[i].members_id,
-                type:"Follow Up",
-                members_name: this.state.all_com2[i].members_id,
+                type:"Communication",
+                members_first_name: this.state.all_com2[i].first_name,
+                members_last_name: this.state.all_com2[i].last_name,
                 date:this.state.all_com2[i].follow_up_date,
               })
             }
@@ -67,7 +68,7 @@ export default class Notification extends Component {
         }
       }));
 
-      fetch('/notification3')
+      fetch('/notificationBirthday')
       .then(res => res.json())
       .then(all_bir => this.setState({all_bir}
         ,()=>{
@@ -79,7 +80,8 @@ export default class Notification extends Component {
               array.push({
                 members_id:this.state.all_bir[i].members_id,
                 type:"Birthday",
-                members_name: this.state.all_bir[i].first_name + " "+ this.state.all_bir[i].last_name,
+                members_first_name: this.state.all_bir[i].first_name,
+                members_last_name: this.state.all_bir[i].last_name,
                 date:this.state.all_bir[i].birthday,
               })
             }
@@ -88,7 +90,7 @@ export default class Notification extends Component {
         }
       }));
 
-      fetch('/notification4')
+      fetch('/notificationMarriage')
       .then(res => res.json())
       .then(all_mar => this.setState({all_mar}
         ,()=>{
@@ -99,9 +101,31 @@ export default class Notification extends Component {
             if (this.state.all_mar[i].marriage_date != 'Invalid date' && this.state.all_mar[i].marriage_date != ''){
               array.push({
                 members_id:this.state.all_mar[i].members_id,
-                type:"Anniversary",
-                members_name: this.state.all_mar[i].members_id,
+                type:"Marriage Anniversary",
+                members_first_name: this.state.all_mar[i].first_name,
+                members_last_name: this.state.all_mar[i].last_name,
                 date:this.state.all_mar[i].marriage_date,
+              })
+            }
+            this.setState({ myArray:array});
+          }
+        }
+      }));
+      fetch('/notificationBaptism')
+      .then(res => res.json())
+      .then(all_bap => this.setState({all_bap}
+        ,()=>{
+        if (Object.getOwnPropertyNames(this.state.all_bap).length > 0){
+          //console.log("inside length>0")
+          for (var i = 0; i < this.state.all_bap.length; i++){
+            var array = this.state.myArray;
+            if (this.state.all_bap[i].start_date != 'Invalid date' && this.state.all_bap[i].start_date != ''){
+              array.push({
+                members_id:this.state.all_bap[i].members_id,
+                type:"Baptism Anniversary",
+                members_first_name: this.state.all_bap[i].first_name,
+                members_last_name: this.state.all_bap[i].last_name,
+                date:this.state.all_bap[i].baptism_date,
               })
             }
             this.setState({ myArray:array});
@@ -115,7 +139,7 @@ export default class Notification extends Component {
     return (
       <div style={{marginTop:20,textAlign:'center'}}>
         <div style={{marginTop:20,textAlign:'center'}}>
-          <h2>Notification Table</h2>
+          <h2>My Reminders Table</h2>
           </div>
           <ReactTable
           data={this.state.myArray}
@@ -135,21 +159,19 @@ export default class Notification extends Component {
                 {
                   Header: "Date",
                   accessor: "date",
-                  // maxWidth: 120,
-                  // Cell: ({ value }) => (
-                  //   value === "EM" ? "Email" :
-                  //   value === "PC" ? "Phone Call" :
-                  //   value === "TM" ? "Text Message" :
-                  //   value === "IP" ? "In Person" :
-                  //   "N/A"),
                 },
                 {
-                  Header: "members_name",
-                  accessor: "members_name",
+                  Header: "First Name",
+                  accessor: "members_first_name",
                   // maxWidth: 160,
                 },
                 {
-                  Header: "Type",
+                  Header: "Last Name",
+                  accessor: "members_last_name",
+                  // maxWidth: 160,
+                },
+                {
+                  Header: "Reminder Type",
                   accessor: "type",
                 },
               ]

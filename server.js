@@ -159,21 +159,21 @@ app.post('/promoterole/:id/:date', (req, res) =>{
   })
 });
 
-app.get('/notification/:id', (req, res) => {
+// app.get('/notificationCom/:id', (req, res) => {
+//   //console.log("req.params",req.params);
+//   connection.query("SELECT * FROM members_events WHERE communication_date > NOW() AND communication_date < DATE_ADD( NOW(), INTERVAL 7 DAY) AND users_id = ?", req.params.id ,function (err, result, fields){
+//     if (err) {
+//       console.log("notification err", err);
+//     }else {
+//     var all_com = result;
+//     //console.log("all_com",all_com)
+//     res.json(all_com);
+//     }
+//   });
+// });
+app.get('/notificationFollowUp/:id', (req, res) => {
   //console.log("req.params",req.params);
-  connection.query("SELECT * FROM members_events WHERE communication_date > NOW() AND communication_date < DATE_ADD( NOW(), INTERVAL 7 DAY) AND users_id = ?", req.params.id ,function (err, result, fields){
-    if (err) {
-      console.log("notification err", err);
-    }else {
-    var all_com = result;
-    //console.log("all_com",all_com)
-    res.json(all_com);
-    }
-  });
-});
-app.get('/notification2/:id', (req, res) => {
-  //console.log("req.params",req.params);
-  connection.query("SELECT * FROM members_events WHERE follow_up_date > NOW() AND follow_up_date < DATE_ADD( NOW(), INTERVAL 7 DAY) AND users_id = ?",req.params.id, function (err, result, fields){
+  connection.query("SELECT * FROM notification_follow_up WHERE users_id = ?",req.params.id, function (err, result, fields){
     if (err) {
       console.log("notification err", err);
     }else {
@@ -183,9 +183,9 @@ app.get('/notification2/:id', (req, res) => {
     }
   });
 });
-app.get('/notification3', (req, res) => {
+app.get('/notificationBirthday', (req, res) => {
   //console.log("req.params",req.params);
-  connection.query(" SELECT * FROM members WHERE DATE_FORMAT(members.birthday, '%m-%d') BETWEEN DATE_FORMAT(NOW(), '%m-%d') AND DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), '%m-%d') ", function (err, result, fields){
+  connection.query(" SELECT * FROM notification_birthday", function (err, result, fields){
     if (err) {
       console.log("notification birthday err", err);
     }else {
@@ -195,15 +195,27 @@ app.get('/notification3', (req, res) => {
     }
   });
 });
-app.get('/notification4', (req, res) => {
+app.get('/notificationMarriage', (req, res) => {
   //console.log("req.params",req.params);
-  connection.query(" SELECT * FROM members_marriage WHERE DATE_FORMAT(members_marriage.marriage_date, '%m-%d') BETWEEN DATE_FORMAT(NOW(), '%m-%d') AND DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), '%m-%d') ", function (err, result, fields){
+  connection.query(" SELECT * FROM notification_marriage", function (err, result, fields){
     if (err) {
-      console.log("notification birthday err", err);
+      console.log("notification mar aniversary err", err);
     }else {
     var all_mar = result;
     //console.log("all_mar",all_mar)
     res.json(all_mar);
+    }
+  });
+});
+app.get('/notificationBaptism', (req, res) => {
+  //console.log("req.params",req.params);
+  connection.query(" SELECT * FROM notification_baptism", function (err, result, fields){
+    if (err) {
+      console.log("notification bap aniversary err", err);
+    }else {
+    var all_bap = result;
+    console.log("all_bap",all_bap)
+    res.json(all_bap);
     }
   });
 });

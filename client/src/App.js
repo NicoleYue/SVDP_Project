@@ -53,7 +53,7 @@ function App(props) {
         </Link></li>
 
         <li><Link className="link" to="/notification" onClick={close} style={{height:30,justifyContent:'center', textDecoration: 'none'}}>
-      🔔  Notification
+      🔔  My Reminders
       </Link></li>
       {/* <hr/>
       <a className="menu-item"  style={{height:30,justifyContent:'center'}}>
