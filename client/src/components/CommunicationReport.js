@@ -104,7 +104,7 @@ export default class CommunicationReport extends Component {
                 {
                   Header: "Title",
                   accessor: "title",
-                  maxWidth: 160,
+                  maxWidth: 250,
                 },
                 {
                   Header: "Communication Date",

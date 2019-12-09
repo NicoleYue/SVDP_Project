@@ -194,7 +194,7 @@ app.get('/notificationBaptism', (req, res) => {
       console.log("notification bap aniversary err", err);
     }else {
     var all_bap = result;
-    console.log("all_bap",all_bap)
+    //console.log("all_bap",all_bap)
     res.json(all_bap);
     }
   });
@@ -310,7 +310,7 @@ app.get('/viewbaptism/:id', (req, res) => {
   //console.log(req.params);
   connection.query("SELECT * FROM members_baptism WHERE members_id = ?",[req.params.id], function (err, result, fields){
     var bap = result;
-    //console.log("bap",bap)
+    console.log("bap",bap)
     if (bap[0] == undefined){
       res.json({})
     }else{

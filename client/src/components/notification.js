@@ -11,6 +11,7 @@ export default class Notification extends Component {
       all_com2: [],
       all_bir:[],
       myArray: [],
+      date:14,
     };
   }
 
@@ -134,13 +135,19 @@ export default class Notification extends Component {
       }));
   }
 
-
   render() {
     return (
       <div style={{marginTop:20,textAlign:'center'}}>
         <div style={{marginTop:20,textAlign:'center'}}>
           <h2>My Reminders Table</h2>
+          <br/>
+          <select style={{width:175,height:30, padding:0}} value={this.state.date} onChange={e => this.setState({ date: e.target.value})}>
+            <option Value={7} >1 week</option>
+            <option Value={14}>2 weeks</option>
+            <option value={30}>1 month</option>
+          </select>
           </div>
+          <br/>
           <ReactTable
           data={this.state.myArray}
           getTdProps={(state, rowInfo, column, instance) => {

@@ -21,7 +21,7 @@ export default class Sacrament extends Component {
         baptism_date:null,
         denomination:'',
         bap_id:'',
-        baptism_certificate:'',
+        baptism_certificate:null,
 
         show_current_marriage:false,
         isOpenMar:false,
@@ -63,18 +63,15 @@ export default class Sacrament extends Component {
   }
   componentDidMount() {
     const id = this.props.location.pathname;
-    // const userid = fakeAuth.user_id;
     fetch(id)
       .then(res => res.json())
       .then(member => this.setState({
         members_id:member.members_id,
       }, () => {
-      //console.log(this.state.members_id)
-
       fetch("/viewbaptism/"+this.state.members_id)
       .then(res => res.json())
       .then(bap => this.setState({bap},()=>{
-        console.log('inside bap', this.state.bap)
+        console.log('inside bap', this.state.bap.baptism_certificate)
         if (Object.getOwnPropertyNames(this.state.bap).length > 0){
             console.log('inside length>0')
             this.setState({
@@ -85,8 +82,8 @@ export default class Sacrament extends Component {
                 baptism_date:this.state.bap.baptism_date,
                 denomination:this.state.bap.denomination,
                 bap_id:this.state.bap.id,
-                baptism_certificate:'',
-            })
+                baptism_certificate:URL.createObjectURL(new Blob([this.state.bap.baptism_certificate.data], {type: 'application/pdf'})),
+            },()=>{console.log("baptism_certificate",this.state.baptism_certificate)})
         }
       }));
   
@@ -103,7 +100,7 @@ export default class Sacrament extends Component {
                 convalidation_date:this.state.mar.convalidation_date,
                 denomination2:this.state.mar.denomination,
                 mar_id:this.state.mar.id,
-              },()=>{console.log("this.state.mar",this.state.mar)});
+              });
             }
       }));
 
@@ -120,9 +117,9 @@ export default class Sacrament extends Component {
       fetch("/viewconfirmation/"+this.state.members_id)
       .then(res => res.json())
       .then(con => this.setState({con},()=>{
-        console.log('inside con', this.state.con)
+        //console.log('inside con', this.state.con)
         if (Object.getOwnPropertyNames(this.state.con).length > 0){
-            console.log('inside length>0')
+            //console.log('inside length>0')
             this.setState({
                 show_confirmation:true,
                 church_name2: this.state.con.church_name,
@@ -180,6 +177,7 @@ export default class Sacrament extends Component {
         church_address:this.state.church_address,
         baptism_date:null,
         denomination:this.state.denomination,
+        baptism_certificate:this.state.baptism_certificate,
       }
         }, () => {
       console.log("baptism_table",this.state.baptism_table)
@@ -190,7 +188,6 @@ export default class Sacrament extends Component {
         },
         body: JSON.stringify(this.state.baptism_table)
       })
-      // .then(res => res.json())
       .then((id) => 
          {this.props.history.push('/');
           this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
@@ -199,7 +196,25 @@ export default class Sacrament extends Component {
         console.log(err);
         alert('Error logging in please try again - onsubmitbap');
       });
+
+      // fetch("/editbaptism/"+this.state.bap_id, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/pdf'
+      //   },
+      //   body: JSON.stringify(this.state.baptism_certificate)
+      // })
+      // .then((id) => 
+      //    {this.props.history.push('/');
+      //     this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
+      // )
+      // .catch(err => {
+      //   console.log(err);
+      //   alert('Error logging in please try again - onsubmitbap');
+      // });
+
       });
+
       }else{
         this.setState({
       baptism_table: {
@@ -209,6 +224,7 @@ export default class Sacrament extends Component {
         church_address:this.state.church_address,
         baptism_date:this.state.baptism_date,
         denomination:this.state.denomination,
+        baptism_certificate:this.state.baptism_certificate,
       }
         }, () => {
       console.log("baptism_table",this.state.baptism_table)
@@ -241,6 +257,7 @@ export default class Sacrament extends Component {
         church_address:this.state.church_address,
         baptism_date:null,
         denomination:this.state.denomination,
+        baptism_certificate:this.state.baptism_certificate,
       }
         }, () => {
       console.log("baptism_table",this.state.baptism_table)
@@ -270,6 +287,7 @@ export default class Sacrament extends Component {
         church_address:this.state.church_address,
         baptism_date:this.state.baptism_date,
         denomination:this.state.denomination,
+        baptism_certificate:this.state.baptism_certificate,
       }
         }, () => {
       console.log("baptism_table",this.state.baptism_table)
@@ -675,7 +693,6 @@ export default class Sacrament extends Component {
            });
     }
   }
-
   onSubmitCon = (event) => {
     event.preventDefault();
     if (Object.getOwnPropertyNames(this.state.con).length > 0){
@@ -888,15 +905,28 @@ export default class Sacrament extends Component {
                 <label>{this.state.denomination}</label>
             </div>
             </Col>
-    
-            <Col xs={3.5}>
+            <Col xs={3.5}/>
+            </Row>
+
+            <Row around="xs">
+            <Col xs={1} />
+            <Col xs={6}>
             <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
               <label>Baptism Certificate:</label>
             </div>
+            
+            <div style={{float: 'left',marginTop:17,marginLeft:0}}>
+              <input 
+                type="file" 
+                onChange={ (e) => this.setState({baptism_certificate: URL.createObjectURL(e.target.files[0])}) } 
+              />
+            </div>
+
             <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
                 <a href={this.state.baptism_certificate} target = "_blank" >View Document</a>
             </div>
             </Col>
+            <Col xs={5}/>
             </Row>
            </div>     
       }else{
@@ -1226,15 +1256,11 @@ export default class Sacrament extends Component {
           style={{height:20, padding:4}}
         />
         </div>
-        
-        <div style={{width:200,float: 'left',marginTop:20,marginLeft:30}}>
-          <label>Upload Baptism Certificate</label>
-        </div>
         <div style={{float: 'left',marginTop:17,marginLeft:30}}>
-        <input 
-          type="file" 
-          onChange={ (e) => this.setState({file: URL.createObjectURL(e.target.files[0])}) } 
-        />
+              <input 
+                type="file" 
+                onChange={ (e) => this.setState({baptism_certificate: URL.createObjectURL(e.target.files[0])}) } 
+              />
         </div>
         </div>
 
