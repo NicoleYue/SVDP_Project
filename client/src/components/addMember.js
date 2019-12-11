@@ -35,10 +35,11 @@ export default class AddMember extends Component {
     };
   }
 
-
+  // add and save new member's info
   onSubmit = (event) => {
     event.preventDefault();
     console.log(this.state);
+    //link to "/addMember" address in "server.js"
     fetch('/addMember', {
         method: 'POST',
         headers: {
@@ -48,9 +49,11 @@ export default class AddMember extends Component {
       })
       .then(res => res.json())
       .then((id) => 
+          // Direct to editmember page after the member is added
          {this.props.history.push('/editMember/'+id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
       )
       .catch(err => {
+        //alert err message if anything is wrong when add the new member
         console.log(err);
         alert('Error logging in please try again - onsubmit - addmember');
       });
@@ -63,13 +66,17 @@ export default class AddMember extends Component {
       <div style={{alignContent:'center',textAlign:'center'}}>
       <label ></label>
       </div>
+      {/* form with onSubmit function to save member's info when click on save button */}
       <form onSubmit={this.onSubmit} style={{marginTop:30}}>
+      {/* Row & Col commponents to organize the layout of the fields */}
       <Row around="xs">
         <Col xs={1} />
         <Col xs={3.5}>
+        {/* First name label */}
         <div style={{width:130,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
           <label>First Name</label>
         </div>
+        {/* First name for user to input */}
         <div style={{float: 'left',marginTop:15}}>
         <input
           required
@@ -556,9 +563,11 @@ export default class AddMember extends Component {
         </div>
         </Col>
         <Col xs={3.5}>
+        {/* button to save the member's info */}
         <div style={{textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
             <button type="submit" value="Submit" style={{width:150,height:30}}>Add Member</button>
         </div>
+        {/* button to direct back to homepage */}
         <div style={{float: 'left',marginTop:20,marginLeft:10}}>
             <button onClick={()=>this.props.history.push('/')} style={{width:160,height:30}}>Cancel</button>
         </div>

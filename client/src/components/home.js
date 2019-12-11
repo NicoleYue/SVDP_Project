@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-
+//This is the homepage of this app, which includes the member's table
 class Home extends Component {
   constructor() {
     super();
@@ -9,21 +9,25 @@ class Home extends Component {
       members: [],
     };
   }
-
+  //componentDidMount is invoked immediately after a component is mounted
   componentDidMount() {
+    //fetch help link the front-end with the back-end "server.js" file
     fetch('/api')
       .then(res => res.json())
+      //get the members' data from databse and set it as a state in front-end
       .then(members => this.setState({members}));
   }
 
 
   render() {
     const {members } = this.state;
+    console.log(members)
     return (
       <div style={{marginTop:20,textAlign:'center'}}>
         <div style={{marginTop:20,textAlign:'center'}}>
           <h2>Member Table</h2>
           </div>
+          {/* The table on the home page are using a library called "react-table"  */}
           <ReactTable
           data={members}
           filterable
@@ -31,6 +35,7 @@ class Home extends Component {
             String(row[filter.id]) === filter.value}
           getTdProps={(state, rowInfo, column, instance) => {
             return {
+              // when user click on one row in the ReactTable, it lead to edit member page
               onClick: (e, handleOriginal) => {
                 console.log('It was in this row:', rowInfo)
                 if (rowInfo !== undefined){
@@ -42,16 +47,23 @@ class Home extends Component {
           }}
           columns={[
             {
+              //Here are all the columns show up on the homepage
               columns: [
                 {
+                  //Hearder is the name showup on the homepage for this column
                   Header: "ID",
+                  //accessor is the "id" that make the column know what information to show
                   accessor: "members_id",
+                  //maxWidth indicates the default width for this column
                   maxWidth: 60,
                 },
                 {
                   Header: "First Name",
                   accessor: "first_name",
                   maxWidth: 100,
+                  //filterMethod set the rule of how to filter the infor
+                  //startsWith compare the user inputs search with the infor in each row
+                  //toUpperCase() make it able to filter without being case sensative
                   filterMethod: (filter, row) =>
                     (row[filter.id].toUpperCase()).startsWith(filter.value.toUpperCase())
                 },
@@ -80,6 +92,7 @@ class Home extends Component {
                     return row[filter.id] === "I";
                   },
                   Filter: ({ filter, onChange }) =>
+                  //select are dropdown to let user choose which one to pick
                     <select
                       onChange={event => onChange(event.target.value)}
                       style={{ width: "100%" }}
@@ -304,15 +317,15 @@ class Home extends Component {
           defaultPageSize={10}
           // pivotBy={["first_name"],["last_name"]}
           className="-striped -highlight"
-          defaultSorted={[{ // the sorting model for the table
+          defaultSorted={[{ //set the default sorting model for the table
             id: 'members_id',
             desc: false
           }]}
-          defaultFiltered={[{ // the current filters model
+          defaultFiltered={[{ // set the default filter for the table
             id: 'members_status',
             value: 'A'
           }]}
-          defaultFiltered={[{ // the current filters model
+          defaultFiltered={[{ // set the default filter for the table
             id: 'roles_status',
             value: 'A'
           }]}

@@ -101,17 +101,20 @@ export default class EditMember extends Component {
       promote_table:{},
     };
   }
-
+  //open or close the add role modal
+  //modal is a popup with a libary "react-responsive-modal"
   toggleModal = () => {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+  //open or close the edit role modal
   toggleModal2 = () => {
     this.setState({
       isOpen2: !this.state.isOpen2
     });
   }
+  //open or close the promote modal
   togglePromote= () => {
     this.setState({
       promoteOpen: !this.state.promoteOpen,
@@ -150,40 +153,21 @@ export default class EditMember extends Component {
       },()=>{console.log("No this.state.promote_table", this.state.currentIniRole)});
     }
   }
+  //open or close the add communication modal
   toggleCommunication = () => {
     this.setState({
       isOpenCommunication: !this.state.isOpenCommunication
     });
   }
+  //open or close the edit communication modal
   toggleCommunication2 = () => {
     this.setState({
       isOpenCommunication2: !this.state.isOpenCommunication2
     });
   }
+  //Direct sacraments page of each member
   toggleSacraments = () => {
     this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');
-  //   this.setState({isOpenSacraments: !this.state.isOpenSacraments})
-  //   if (Object.getOwnPropertyNames(this.state.bap).length > 0){
-  //   this.setState({
-  //     church_name: this.state.bap.church_name,
-  //     contact_phone:this.state.bap.contact_phone,
-  //     church_address:this.state.bap.church_address,
-  //     baptism_date:this.state.bap.baptism_date,
-  //     denomination:this.state.bap.denomination,
-  //     bap_id:this.state.bap.id,
-  //   },()=>{console.log("this.state.bap",this.state.bap, this.state.church_name)});
-  // }
-  // if (Object.getOwnPropertyNames(this.state.mar).length > 0){
-  //   this.setState({
-  //     spouse_name:this.state.mar.spouse_name,
-  //     spouse_baptismal_status:this.state.mar.spouse_baptismal_status,
-  //     marriage_type:this.state.mar.marriage_type,
-  //     marriage_date:this.state.mar.marriage_date,
-  //     convalidation_date:this.state.mar.convalidation_date,
-  //     denomination2:this.state.mar.denomination,
-  //     mar_id:this.state.mar.id,
-  //   },()=>{console.log("this.state.mar",this.state.mar)});
-  // }
 }
   componentDidMount() {
   const id = this.props.location.pathname;
@@ -243,9 +227,12 @@ export default class EditMember extends Component {
     }));
     
 }
+  //post data to database to add a new commmunication
   addCommunication = (event) => {
+    //fakeAuth.user_id is the id for the user who logined to the account
     console.log("fakeAuth.user_id",fakeAuth.isAuthenticated,fakeAuth.user_id)
     event.preventDefault();
+    //set data from database to states in front-end
     this.setState({
       communication_table: {
         members_id: this.state.members_id,
@@ -259,6 +246,7 @@ export default class EditMember extends Component {
     }, () => {
       console.log("communication_table",this.state.communication_table)
       console.log()
+      //link to "/addcommunication" in "server.js"
       fetch("/addcommunication", {
         method: 'POST',
         headers: {
@@ -284,10 +272,12 @@ export default class EditMember extends Component {
       });
   });
   }
+  //delete the selected communication
   deleteCommunication = (event) =>{
     event.preventDefault();
     const id = this.state.com_id;
     console.log(id)
+    //link to "/deletecommunication/:id" in "server.js"
     fetch("/deletecommunication/"+id, {
       method: 'POST',
       headers: {
@@ -307,8 +297,10 @@ export default class EditMember extends Component {
 
 
   }
+  //edit the selected communication
   editCommunication = (event) => {
     event.preventDefault();
+    //if this.state.communication_date_time2 does not have date entered, setstate as null
     if ((this.state.communication_date_time2 == 'Invalid date' || this.state.communication_date_time2 == '') && (this.state.follow_up_date_time2 == 'Invalid date' || this.state.follow_up_date_time2 == '')){
     this.setState({
       communication_table: {
@@ -321,6 +313,7 @@ export default class EditMember extends Component {
     }, () => {
       const id = this.state.com_id;
       console.log("changed com",this.state.communication_table)
+      //link to "/editcommunication/:id" in "server.js"
       fetch("/editcommunication/"+id, {
         method: 'POST',
         headers: {
@@ -329,6 +322,7 @@ export default class EditMember extends Component {
         body: JSON.stringify(this.state.communication_table)
       })
       .then((id) => 
+      //push to home page, then push to editmember page to refresh the page
          {this.props.history.push('/');
            this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
       )
@@ -425,6 +419,7 @@ export default class EditMember extends Component {
 
 
   }
+  //save & update the member information
   onSubmit = (event) => {
     event.preventDefault();
     const id = this.props.location.pathname;
@@ -522,6 +517,7 @@ export default class EditMember extends Component {
   });
   }
   }
+  //delete the selected role
   deleteRole= (event) =>{
     event.preventDefault();
     const id = this.state.role_id2;
@@ -545,6 +541,7 @@ export default class EditMember extends Component {
 
 
   }
+  //add a new role to this member
   onSubmitRole = (event) => {
     event.preventDefault();
     this.setState({
@@ -584,6 +581,7 @@ export default class EditMember extends Component {
       });
   });
   }
+  //edit the selected role
   onEditRole = (event) => {
     event.preventDefault();
     //console.log("this.state.start_date2,this.state.end_date2",this.state.start_date2,this.state.end_date2)
@@ -713,6 +711,7 @@ export default class EditMember extends Component {
 
 
   }
+  //promote member's role
   onSubmitPromote= (event) => {
     event.preventDefault();
     this.setState({
@@ -750,386 +749,7 @@ export default class EditMember extends Component {
       });
   });
   }
-  onSubmitSacraments = (event) => {
-    console.log(this.state.file)
-    event.preventDefault();
-    console.log("this.state.bap",this.state.bap);
-    if (Object.getOwnPropertyNames(this.state.bap).length > 0){
-      console.log("need update row")
-      if (this.state.baptism_date == 'Invalid date' || this.state.baptism_date == ''){
-        this.setState({
-      baptism_table: {
-        members_id:this.state.members_id,
-        church_name:this.state.church_name,
-        contact_phone:this.state.contact_phone,
-        church_address:this.state.church_address,
-        baptism_date:null,
-        denomination:this.state.denomination,
-      }
-        }, () => {
-      console.log("baptism_table",this.state.baptism_table)
-      fetch("/editbaptism/"+this.state.bap_id, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.baptism_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - onsubmitbap');
-      });
-      });
-      }else{
-        this.setState({
-      baptism_table: {
-        members_id:this.state.members_id,
-        church_name:this.state.church_name,
-        contact_phone:this.state.contact_phone,
-        church_address:this.state.church_address,
-        baptism_date:this.state.baptism_date,
-        denomination:this.state.denomination,
-      }
-        }, () => {
-      console.log("baptism_table",this.state.baptism_table)
-      fetch("/editbaptism/"+this.state.bap_id, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.baptism_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - onsubmitbap');
-      });
-      });
-      }
-    }else{
-      console.log("need add new row")
-      if (this.state.baptism_date == 'Invalid date' || this.state.baptism_date == ''){
-        this.setState({
-      baptism_table: {
-        members_id:this.state.members_id,
-        church_name:this.state.church_name,
-        contact_phone:this.state.contact_phone,
-        church_address:this.state.church_address,
-        baptism_date:null,
-        denomination:this.state.denomination,
-      }
-        }, () => {
-      console.log("baptism_table",this.state.baptism_table)
-      fetch("/addbaptism", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.baptism_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - oneditbap');
-      });
-      });
-      }else{
-        this.setState({
-      baptism_table: {
-        members_id:this.state.members_id,
-        church_name:this.state.church_name,
-        contact_phone:this.state.contact_phone,
-        church_address:this.state.church_address,
-        baptism_date:this.state.baptism_date,
-        denomination:this.state.denomination,
-      }
-        }, () => {
-      console.log("baptism_table",this.state.baptism_table)
-      fetch("/addbaptism", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.baptism_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - oneditbap');
-      });
-      });
-      }
-    }
-  }
-  onSubmitSacraments2 = (event) => {
-    console.log("this.state.bap",this.state.bap);
-    event.preventDefault();
-    if (Object.getOwnPropertyNames(this.state.mar).length > 0){
-      console.log("need update row")
-      if ((this.state.marriage_date == 'Invalid date' || this.state.marriage_date == '') && (this.state.convalidation_date == 'Invalid date' || this.state.convalidation_date == '')){
-    this.setState({
-      current_marriage_table: {
-        members_id:this.state.members_id,
-        spouse_name:this.state.spouse_name,
-        spouse_baptismal_status:this.state.spouse_baptismal_status,
-        marriage_type:this.state.marriage_type,
-        marriage_date:null,
-        convalidation_date:null,
-        denomination:this.state.denomination2,
-      }
-    }, () => {
-      console.log("current_marriage_table",this.state.current_marriage_table)
-      fetch("/editcurrentmarriage/"+this.state.mar_id, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.current_marriage_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - onsubmitmar');
-      });
-  });
-      }else if (this.state.marriage_date == 'Invalid date' || this.state.marriage_date == ''){
-    this.setState({
-      current_marriage_table: {
-        members_id:this.state.members_id,
-        spouse_name:this.state.spouse_name,
-        spouse_baptismal_status:this.state.spouse_baptismal_status,
-        marriage_type:this.state.marriage_type,
-        marriage_date:null,
-        convalidation_date:this.state.convalidation_date,
-        denomination:this.state.denomination2,
-      }
-    }, () => {
-      console.log("current_marriage_table",this.state.current_marriage_table)
-      fetch("/editcurrentmarriage/"+this.state.mar_id, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.current_marriage_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - onsubmitmar');
-      });
-  });
-      }else if (this.state.convalidation_date == 'Invalid date' || this.state.convalidation_date == ''){
-    this.setState({
-      current_marriage_table: {
-        members_id:this.state.members_id,
-        spouse_name:this.state.spouse_name,
-        spouse_baptismal_status:this.state.spouse_baptismal_status,
-        marriage_type:this.state.marriage_type,
-        marriage_date:this.state.marriage_date,
-        convalidation_date:null,
-        denomination:this.state.denomination2,
-      }
-    }, () => {
-      console.log("current_marriage_table",this.state.current_marriage_table)
-      fetch("/editcurrentmarriage/"+this.state.mar_id, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.current_marriage_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - onsubmitmar');
-      });
-  });
-      }else{
-    this.setState({
-      current_marriage_table: {
-        members_id:this.state.members_id,
-        spouse_name:this.state.spouse_name,
-        spouse_baptismal_status:this.state.spouse_baptismal_status,
-        marriage_type:this.state.marriage_type,
-        marriage_date:this.state.marriage_date,
-        convalidation_date:this.state.convalidation_date,
-        denomination:this.state.denomination2,
-      }
-    }, () => {
-      console.log("current_marriage_table",this.state.current_marriage_table)
-      fetch("/editcurrentmarriage/"+this.state.mar_id, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.state.current_marriage_table)
-      })
-      // .then(res => res.json())
-      .then((id) => 
-         {this.props.history.push('/');
-          this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      )
-      .catch(err => {
-        console.log(err);
-        alert('Error logging in please try again - onsubmitmar');
-      });
-  });
-      }
-    }else{
-      console.log("need add new row")
-      if ((this.state.marriage_date == 'Invalid date' || this.state.marriage_date == '') && (this.state.convalidation_date == 'Invalid date' || this.state.convalidation_date == '')){
-        this.setState({
-          current_marriage_table: {
-            members_id:this.state.members_id,
-            spouse_name:this.state.spouse_name,
-            spouse_baptismal_status:this.state.spouse_baptismal_status,
-            marriage_type:this.state.marriage_type,
-            marriage_date:null,
-            convalidation_date:null,
-            denomination:this.state.denomination2,
-          }
-        }, () => {
-          console.log("current_marriage_table",this.state.current_marriage_table)
-          fetch("/addcurrentmarriage", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.current_marriage_table)
-          })
-          // .then(res => res.json())
-          .then((id) => 
-             {this.props.history.push('/');
-              this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-          )
-          .catch(err => {
-            console.log(err);
-            alert('Error logging in please try again - onsubmitmar');
-          });
-      });
-          }else if (this.state.marriage_date == 'Invalid date' || this.state.marriage_date == ''){
-        this.setState({
-          current_marriage_table: {
-            members_id:this.state.members_id,
-            spouse_name:this.state.spouse_name,
-            spouse_baptismal_status:this.state.spouse_baptismal_status,
-            marriage_type:this.state.marriage_type,
-            marriage_date:null,
-            convalidation_date:this.state.convalidation_date,
-            denomination:this.state.denomination2,
-          }
-        }, () => {
-          console.log("current_marriage_table",this.state.current_marriage_table)
-          fetch("/addcurrentmarriage", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.current_marriage_table)
-          })
-          // .then(res => res.json())
-          .then((id) => 
-             {this.props.history.push('/');
-              this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-          )
-          .catch(err => {
-            console.log(err);
-            alert('Error logging in please try again - onsubmitmar');
-          });
-      });
-          }else if (this.state.convalidation_date == 'Invalid date' || this.state.convalidation_date == ''){
-        this.setState({
-          current_marriage_table: {
-            members_id:this.state.members_id,
-            spouse_name:this.state.spouse_name,
-            spouse_baptismal_status:this.state.spouse_baptismal_status,
-            marriage_type:this.state.marriage_type,
-            marriage_date:this.state.marriage_date,
-            convalidation_date:null,
-            denomination:this.state.denomination2,
-          }
-        }, () => {
-          console.log("current_marriage_table",this.state.current_marriage_table)
-          fetch("/addcurrentmarriage", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.current_marriage_table)
-          })
-          // .then(res => res.json())
-          .then((id) => 
-             {this.props.history.push('/');
-              this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-          )
-          .catch(err => {
-            console.log(err);
-            alert('Error logging in please try again - onsubmitmar');
-          });
-      });
-          }else{
-        this.setState({
-          current_marriage_table: {
-            members_id:this.state.members_id,
-            spouse_name:this.state.spouse_name,
-            spouse_baptismal_status:this.state.spouse_baptismal_status,
-            marriage_type:this.state.marriage_type,
-            marriage_date:this.state.marriage_date,
-            convalidation_date:this.state.convalidation_date,
-            denomination:this.state.denomination2,
-          }
-        }, () => {
-          console.log("current_marriage_table",this.state.current_marriage_table)
-          fetch("/addcurrentmarriage", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.current_marriage_table)
-          })
-          // .then(res => res.json())
-          .then((id) => 
-             {this.props.history.push('/');
-              this.props.history.push('/editMember/'+this.state.members_id);} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-          )
-          .catch(err => {
-            console.log(err);
-            alert('Error logging in please try again - onsubmitmar');
-          });
-      });
-          }
-    }
 
-  }
 
   render() {
     let select_subrole;

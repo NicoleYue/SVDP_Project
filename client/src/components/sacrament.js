@@ -62,10 +62,13 @@ export default class Sacrament extends Component {
     };
   }
   componentDidMount() {
+    //id the pathname of current page, try to do "console.log(id)" if you want to see what is it
     const id = this.props.location.pathname;
+    //console.log(id);
     fetch(id)
       .then(res => res.json())
       .then(member => this.setState({
+        //get the members_id to know which member's information we are looking at
         members_id:member.members_id,
       }, () => {
       fetch("/viewbaptism/"+this.state.members_id)
@@ -82,7 +85,7 @@ export default class Sacrament extends Component {
                 baptism_date:this.state.bap.baptism_date,
                 denomination:this.state.bap.denomination,
                 bap_id:this.state.bap.id,
-                baptism_certificate:URL.createObjectURL(new Blob([this.state.bap.baptism_certificate.data], {type: 'application/pdf'})),
+                baptism_certificate:'',
             },()=>{console.log("baptism_certificate",this.state.baptism_certificate)})
         }
       }));
