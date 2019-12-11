@@ -16,36 +16,7 @@ export default class Notification extends Component {
   }
 
   componentDidMount() {
-    // fetch('/notification/'+fakeAuth.user_id,)
-    //   .then(res => res.json())
-    //   .then(all_com => this.setState({all_com}
-    //   ,()=>{
-    //     if (Object.getOwnPropertyNames(this.state.all_com).length > 0){
-    //       //console.log("inside length>0")
-    //       for (var i = 0; i < this.state.all_com.length; i++){
-    //         var array = this.state.myArray;
-    //         if (this.state.all_com[i].communication_date != 'Invalid date' && this.state.all_com[i].communication_date != ''){
-    //           array.push({
-    //             members_id:this.state.all_com[i].members_id,
-    //             type:"Communication",
-    //             members_name: this.state.all_com[i].members_id,
-    //             date:this.state.all_com[i].communication_date,
-    //           })
-    //         }
-    //         //console.log(this.state.all_com[i].follow_up_date,this.state.all_com[i].follow_up_date !== 'Invalid date' && this.state.all_com[i].follow_up_date !== '')
-    //         // if (this.state.all_com[i].follow_up_date !== 'Invalid date' && this.state.all_com[i].follow_up_date !== ''){
-    //         //   array.push({
-    //         //     type:"Follow Up",
-    //         //     members_id: this.state.all_com[i].members_id,
-    //         //     date:this.state.all_com[i].follow_up_date,
-    //         //   })
-    //         // }
-    //         //console.log("i", array);
-    //         this.setState({ myArray:array});
-    //       }
-    //     }
-    //   }));
-
+    // get data of follow up info for this user
       fetch('/notificationFollowUp/'+fakeAuth.user_id)
       .then(res => res.json())
       .then(all_com2 => this.setState({all_com2}
@@ -68,7 +39,7 @@ export default class Notification extends Component {
           }
         }
       }));
-
+      // get data of birthday 
       fetch('/notificationBirthday')
       .then(res => res.json())
       .then(all_bir => this.setState({all_bir}
@@ -90,7 +61,7 @@ export default class Notification extends Component {
           }
         }
       }));
-
+      // get data of marriage date 
       fetch('/notificationMarriage')
       .then(res => res.json())
       .then(all_mar => this.setState({all_mar}
@@ -112,6 +83,7 @@ export default class Notification extends Component {
           }
         }
       }));
+      // get data of baptism date 
       fetch('/notificationBaptism')
       .then(res => res.json())
       .then(all_bap => this.setState({all_bap}
@@ -141,6 +113,7 @@ export default class Notification extends Component {
         <div style={{marginTop:20,textAlign:'center'}}>
           <h2>My Reminders Table</h2>
           <br/>
+          {/* select how many days of reminder's info to show */}
           <select style={{width:175,height:30, padding:0}} value={this.state.date} onChange={e => this.setState({ date: e.target.value})}>
             <option Value={7} >1 week</option>
             <option Value={14}>2 weeks</option>
@@ -152,6 +125,7 @@ export default class Notification extends Component {
           data={this.state.myArray}
           getTdProps={(state, rowInfo, column, instance) => {
             return {
+              //click on row and direct to edit member page for that member
               onClick: (e, handleOriginal) => {
                 if (rowInfo !== undefined){
                   var row = rowInfo.original

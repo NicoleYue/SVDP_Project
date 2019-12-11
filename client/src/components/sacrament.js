@@ -11,6 +11,7 @@ export default class Sacrament extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      //states related to baptism
         show_baptism:false,
         isOpenBap:false,
         baptism_table:{},
@@ -22,7 +23,7 @@ export default class Sacrament extends Component {
         denomination:'',
         bap_id:'',
         baptism_certificate:null,
-
+      //states related to current marriage
         show_current_marriage:false,
         isOpenMar:false,
         current_marriage_table:{},
@@ -36,19 +37,18 @@ export default class Sacrament extends Component {
         baptismal_certificate:'',
         marriage_certificate:'',
         mar_id:'',
-
+      //states related to prior marriages
         show_pre_marriage:false,
-        isOpenPreMar:false,
+        isOpenPreMar:false, //add prior marriage
         premar_table:{},
         premar:[],
         current_marriage_table:{},
         spouse_name2:'',
         marriage_type2:'CI',
         divorce_date:null,
-
         premar_id:'',
-        isOpenPreMar2:false,
-
+        isOpenPreMar2:false, //edit prior marriage
+      //atates related to comfirmation
         show_confirmation:false,
         isOpenCon:false,
         confirmation_table:{},
@@ -71,12 +71,15 @@ export default class Sacrament extends Component {
         //get the members_id to know which member's information we are looking at
         members_id:member.members_id,
       }, () => {
+      //get baptism information for this member from database
       fetch("/viewbaptism/"+this.state.members_id)
       .then(res => res.json())
       .then(bap => this.setState({bap},()=>{
         console.log('inside bap', this.state.bap.baptism_certificate)
+        //check does this member already has baptism info stored in databse or not
         if (Object.getOwnPropertyNames(this.state.bap).length > 0){
             console.log('inside length>0')
+            // if this member already has baptism information in databse, set those data to states 
             this.setState({
                 show_baptism:true,
                 church_name: this.state.bap.church_name,
@@ -89,10 +92,11 @@ export default class Sacrament extends Component {
             },()=>{console.log("baptism_certificate",this.state.baptism_certificate)})
         }
       }));
-  
+      //get current marriage info from database
       fetch("/viewmarriage/"+this.state.members_id)
       .then(res => res.json())
       .then(mar => this.setState({mar},()=>{
+        //check does this member already has current marriage info stored in database or not
         if (Object.getOwnPropertyNames(this.state.mar).length > 0){
               this.setState({
                 show_current_marriage:true,
@@ -106,7 +110,7 @@ export default class Sacrament extends Component {
               });
             }
       }));
-
+      //get prior marriage info from database
       fetch("/viewpremarriage/"+this.state.members_id)
       .then(res => res.json())
       .then(premar => this.setState({premar},()=>{
@@ -116,7 +120,7 @@ export default class Sacrament extends Component {
               });
             }
       }));
-
+      //get confirmation info from database
       fetch("/viewconfirmation/"+this.state.members_id)
       .then(res => res.json())
       .then(con => this.setState({con},()=>{
@@ -136,21 +140,15 @@ export default class Sacrament extends Component {
       }));
     }));
   }
+  //open the modal (popup) for baptism
   toggleBap = () => {
     this.setState({isOpenBap: !this.state.isOpenBap})
-    // if (Object.getOwnPropertyNames(this.state.bap).length > 0){
-    // this.setState({
-    //   church_name: this.state.bap.church_name,
-    //   contact_phone:this.state.bap.contact_phone,
-    //   church_address:this.state.bap.church_address,
-    //   baptism_date:this.state.bap.baptism_date,
-    //   denomination:this.state.bap.denomination,
-    //   bap_id:this.state.bap.id,
-    // },()=>{console.log("this.state.bap",this.state.bap, this.state.church_name)});
   }
+   //open the modal (popup) for current marriage
   toggleMar = () => {
     this.setState({isOpenMar: !this.state.isOpenMar})
   }
+   //open the modal (popup) for add prior marriage
   togglePreMar = () => {
     this.setState({
         isOpenPreMar: !this.state.isOpenPreMar,
@@ -159,18 +157,24 @@ export default class Sacrament extends Component {
         divorce_date: null,
     })
   }
+  //open the modal (popup) for edit prior marriage
   togglePreMar2 = () => {
     this.setState({isOpenPreMar2: !this.state.isOpenPreMar2})
   }
+  //open the modal (popup) for comfirmation
   toggleCon = () => {
     this.setState({isOpenCon: !this.state.isOpenCon})
   }
+  // save the info of baptism
   onSubmitBap = (event) => {
     //console.log(this.state.file)
     event.preventDefault();
     //console.log("this.state.bap",this.state.bap);
+    //check if this member already has baptism information saved or not
     if (Object.getOwnPropertyNames(this.state.bap).length > 0){
+      //member already has baptism info, therefore update the info in database
       console.log("need update row")
+      //check if baptism_date has date entered or not
       if (this.state.baptism_date == 'Invalid date' || this.state.baptism_date == ''){
         this.setState({
       baptism_table: {
@@ -199,25 +203,7 @@ export default class Sacrament extends Component {
         console.log(err);
         alert('Error logging in please try again - onsubmitbap');
       });
-
-      // fetch("/editbaptism/"+this.state.bap_id, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/pdf'
-      //   },
-      //   body: JSON.stringify(this.state.baptism_certificate)
-      // })
-      // .then((id) => 
-      //    {this.props.history.push('/');
-      //     this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
-      // )
-      // .catch(err => {
-      //   console.log(err);
-      //   alert('Error logging in please try again - onsubmitbap');
-      // });
-
       });
-
       }else{
         this.setState({
       baptism_table: {
@@ -238,7 +224,6 @@ export default class Sacrament extends Component {
         },
         body: JSON.stringify(this.state.baptism_table)
       })
-      // .then(res => res.json())
       .then((id) => 
          {this.props.history.push('/');
           this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
@@ -249,6 +234,7 @@ export default class Sacrament extends Component {
       });
       });
       }
+      //member does not have baptism info, therefore add the info in database
     }else{
       console.log("need add new row")
       if (this.state.baptism_date == 'Invalid date' || this.state.baptism_date == ''){
@@ -314,6 +300,7 @@ export default class Sacrament extends Component {
       }
     }
   }
+   // save the info of current marriage (similar to save the info of baptism)
   onSubmitMar = (event) => {
     event.preventDefault();
     if (Object.getOwnPropertyNames(this.state.mar).length > 0){
@@ -565,6 +552,7 @@ export default class Sacrament extends Component {
     }
 
   }
+   // add the info of new prior marriage
   onSubmitPreMar = (event) => {
     event.preventDefault();
     this.setState({
@@ -600,6 +588,7 @@ export default class Sacrament extends Component {
       });
   });
   }
+   // delete the info of selected prior marriage
   OnSubmitDeletePreMar = (event) => {
     var id = this.state.premar_id;
     event.preventDefault();
@@ -625,6 +614,7 @@ export default class Sacrament extends Component {
         alert('Error logging in please try again - onsubmitpremar');
       });
   }
+   // edit the info of selected prior marriage
   onSubmitPreMar2 = (event) => {
     event.preventDefault();
     var id = this.state.premar_id;
@@ -696,6 +686,7 @@ export default class Sacrament extends Component {
            });
     }
   }
+  // save the info of confirmation (similar to save the info of baptism)
   onSubmitCon = (event) => {
     event.preventDefault();
     if (Object.getOwnPropertyNames(this.state.con).length > 0){
@@ -825,6 +816,8 @@ export default class Sacrament extends Component {
 
 
   render() {
+    // if bap_table is null, it will show up "Invalid date".
+    //Therefore, let it show empty label instead: <label></label>
       let bap_date;
       if (this.state.baptism_date == 'Invalid date'){
         bap_date = <label></label>
@@ -852,7 +845,7 @@ export default class Sacrament extends Component {
       }else{
         conf_date = <label>{this.state.confirmation_date}</label>
       }
-
+      //if this member has baptism info, show the bap_form
       let bap_form;
       if (this.state.show_baptism == true){
           bap_form = <div>
@@ -1040,6 +1033,7 @@ export default class Sacrament extends Component {
           data={this.state.premar}
           getTdProps={(state, rowInfo, column, instance) => {
             return {
+              //click to edit prior marriage info
               onClick: (e, handleOriginal) => {
                 if (rowInfo !== undefined){
                   var row = rowInfo.original
@@ -1182,13 +1176,13 @@ export default class Sacrament extends Component {
         </div>
         </Col>
         </Row>
-
+      {/* if this member has baptism info, let bap_form dispaly the info */}
       {bap_form}
       {mar_form}
       {premar_form}
       {con_form}
       <div style={{height:60}} />
-
+      {/* the modal (popup) for add/edit baptism */}
         <Modal open={this.state.isOpenBap} onClose={this.toggleBap} center>
       <form onSubmit={this.onSubmitBap} style={{marginTop:0}}>
         <h3>Baptism</h3>
@@ -1275,7 +1269,7 @@ export default class Sacrament extends Component {
         </div>
         </form>
         </Modal>
-
+      {/* the modal (popup) for add/edit current marriage */}
         <Modal open={this.state.isOpenMar} onClose={this.toggleMar} center>
         <form onSubmit={this.onSubmitMar} style={{marginTop:0}}>
         <div style={{clear:'both', marginTop:10}}>
@@ -1364,7 +1358,7 @@ export default class Sacrament extends Component {
         </div>
         </form>
         </Modal>
-
+      {/* the modal (popup) for add/edit confirmation */}
         <Modal open={this.state.isOpenCon} onClose={this.toggleCon} center>
       <form onSubmit={this.onSubmitCon} style={{marginTop:0}}>
         <h3>Confirmation</h3>
@@ -1446,7 +1440,7 @@ export default class Sacrament extends Component {
         </div>
         </form>
         </Modal>
-
+      {/* the modal (popup) for add prior marriage*/}
         <Modal open={this.state.isOpenPreMar} onClose={this.togglePreMar} center>
         <form onSubmit={this.onSubmitPreMar} style={{marginTop:0}}>
         <div style={{clear:'both', marginTop:10}}>
@@ -1502,7 +1496,7 @@ export default class Sacrament extends Component {
         </div>
         </form>
         </Modal>
-
+      {/* the modal (popup) for edit prior marriage*/}
         <Modal open={this.state.isOpenPreMar2} onClose={this.togglePreMar2} center>
         <form onSubmit={this.onSubmitPreMar2} style={{marginTop:0}}>
         <div style={{clear:'both', marginTop:10}}>

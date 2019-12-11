@@ -315,7 +315,6 @@ class Home extends Component {
             }
           ]}
           defaultPageSize={10}
-          // pivotBy={["first_name"],["last_name"]}
           className="-striped -highlight"
           defaultSorted={[{ //set the default sorting model for the table
             id: 'members_id',
