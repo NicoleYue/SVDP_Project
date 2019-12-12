@@ -61,8 +61,8 @@ class Home extends Component {
                   Header: "First Name",
                   accessor: "first_name",
                   maxWidth: 100,
-                  //filterMethod set the rule of how to filter the infor
-                  //startsWith compare the user inputs search with the infor in each row
+                  //filterMethod set the rule of how to filter the info
+                  //startsWith compare the user inputs search with the info in each row
                   //toUpperCase() make it able to filter without being case sensative
                   filterMethod: (filter, row) =>
                     (row[filter.id].toUpperCase()).startsWith(filter.value.toUpperCase())
