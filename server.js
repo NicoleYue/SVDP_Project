@@ -148,8 +148,8 @@ app.post('/promoterole/:id/:date', (req, res) =>{
   })
 });
 
-app.get('/notificationFollowUp/:id', (req, res) => {
-  //console.log("req.params",req.params);
+app.get('/notificationFollowUp/:id/:time', (req, res) => {
+  console.log("req.params",req.params);
   connection.query("SELECT * FROM notification_follow_up WHERE users_id = ?",req.params.id, function (err, result, fields){
     if (err) {
       console.log("notification err", err);
@@ -161,7 +161,7 @@ app.get('/notificationFollowUp/:id', (req, res) => {
   });
 });
 
-app.get('/notificationBirthday', (req, res) => {
+app.get('/notificationBirthday/:time', (req, res) => {
   //console.log("req.params",req.params);
   connection.query(" SELECT * FROM notification_birthday", function (err, result, fields){
     if (err) {
@@ -174,7 +174,7 @@ app.get('/notificationBirthday', (req, res) => {
   });
 });
 
-app.get('/notificationMarriage', (req, res) => {
+app.get('/notificationMarriage/:time', (req, res) => {
   //console.log("req.params",req.params);
   connection.query(" SELECT * FROM notification_marriage", function (err, result, fields){
     if (err) {
@@ -187,7 +187,7 @@ app.get('/notificationMarriage', (req, res) => {
   });
 });
 
-app.get('/notificationBaptism', (req, res) => {
+app.get('/notificationBaptism/:time', (req, res) => {
   //console.log("req.params",req.params);
   connection.query(" SELECT * FROM notification_baptism", function (err, result, fields){
     if (err) {
@@ -362,7 +362,6 @@ app.get('/viewconfirmation/:id', (req, res) => {
     }
   });
 });
-
 app.post('/addconfirmation', (req, res) =>{
   var values = req.body;
   //console.log(values);
@@ -387,6 +386,48 @@ app.post('/editconfirmation/:id', (req, res) =>{
       console.log("Could not update con. Try again",error)
     } else {
       console.log("Row updated. -con")
+      var id = results;
+      //console.log(id);
+      res.json(id);
+    } 
+    console.log("Exiting function")
+  })
+});
+app.get('/viewfirstcommunion/:id', (req, res) => {
+  //console.log(req.params);
+  connection.query("SELECT * FROM members_first_communion WHERE members_id = ?",[req.params.id], function (err, result, fields){
+    var com = result;
+    //console.log(com)
+    if (com[0] == undefined){
+      res.json({})
+    }else{
+      res.json(com[0]);
+    }
+  });
+});
+app.post('/addfirstcommunion', (req, res) =>{
+  var values = req.body;
+  //console.log(values);
+  connection.query('INSERT INTO members_first_communion SET ?', values, function(error, results) {
+    if (error) {
+      console.log("Could not add con. Try again",error)
+    } else {
+      console.log("Row inserted. -com")
+      var id = results;
+      //console.log(id);
+      res.json(id);
+    } 
+    console.log("Exiting function")
+  })
+});
+app.post('/editfirstcommunion/:id', (req, res) =>{
+  var values = req.body;
+  //console.log(values);
+  connection.query('UPDATE members_first_communion SET ? WHERE id = ?', [values, req.params.id ], function(error, results) {
+    if (error) {
+      console.log("Could not update con. Try again",error)
+    } else {
+      console.log("Row updated. -com")
       var id = results;
       //console.log(id);
       res.json(id);

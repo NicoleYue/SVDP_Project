@@ -48,7 +48,7 @@ export default class Sacrament extends Component {
         divorce_date:null,
         premar_id:'',
         isOpenPreMar2:false, //edit prior marriage
-      //atates related to comfirmation
+      //states related to comfirmation
         show_confirmation:false,
         isOpenCon:false,
         confirmation_table:{},
@@ -59,6 +59,17 @@ export default class Sacrament extends Component {
         confirmation_date:null,
         officiant:'',
         con_id:'',
+        //states related to first communion
+        show_first_communion:false,
+        isOpenCom:false,
+        communion_table:{},
+        com:{},
+        church_name3:'',
+        contact_phone3:'',
+        church_address3:'',
+        communion_date:null,
+        officiant3:'',
+        com_id:'',
     };
   }
   componentDidMount() {
@@ -138,6 +149,23 @@ export default class Sacrament extends Component {
             })
         }
       }));
+      fetch("/viewfirstcommunion/"+this.state.members_id)
+      .then(res => res.json())
+      .then(com => this.setState({com},()=>{
+        //console.log('inside con', this.state.con)
+        if (Object.getOwnPropertyNames(this.state.com).length > 0){
+            //console.log('inside length>0')
+            this.setState({
+                show_first_communion:true,
+                church_name3: this.state.com.church_name,
+                contact_phone3:this.state.com.contact_phone,
+                church_address3:this.state.com.church_address,
+                communion_date:this.state.com.communion_date,
+                officiant3:this.state.com.officiant,
+                com_id:this.state.com.id,
+            })
+        }
+      }));
     }));
   }
   //open the modal (popup) for baptism
@@ -164,6 +192,9 @@ export default class Sacrament extends Component {
   //open the modal (popup) for comfirmation
   toggleCon = () => {
     this.setState({isOpenCon: !this.state.isOpenCon})
+  }
+  toggleCom = () => {
+    this.setState({isOpenCom: !this.state.isOpenCom})
   }
   // save the info of baptism
   onSubmitBap = (event) => {
@@ -752,7 +783,7 @@ export default class Sacrament extends Component {
       }
     }else{
       console.log("need add new row")
-      if (this.state.baptism_date == 'Invalid date' || this.state.baptism_date == ''){
+      if (this.state.confirmation_date == 'Invalid date' || this.state.confirmation_date == ''){
         this.setState({
         confirmation_table: {
             members_id:this.state.members_id,
@@ -813,6 +844,132 @@ export default class Sacrament extends Component {
       }
     }
   }
+  onSubmitCom = (event) => {
+    event.preventDefault();
+    if (Object.getOwnPropertyNames(this.state.com).length > 0){
+      console.log("need update row")
+      if (this.state.communion_date == 'Invalid date' || this.state.communion_date == ''){
+        this.setState({
+      communion_table: {
+        members_id:this.state.members_id,
+        church_name:this.state.church_name3,
+        contact_phone:this.state.contact_phone3,
+        church_address:this.state.church_address3,
+        communion_date:null,
+        officiant:this.state.officiant3,
+      }
+        }, () => {
+      console.log("communion_table",this.state.communion_table)
+      fetch("/editfirstcommunion/"+this.state.com_id, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.communion_table)
+      })
+      // .then(res => res.json())
+      .then((id) => 
+         {this.props.history.push('/');
+          this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
+      )
+      .catch(err => {
+        console.log(err);
+        alert('Error logging in please try again - onsubmitcom');
+      });
+      });
+      }else{
+        this.setState({
+          communion_table: {
+          members_id:this.state.members_id,
+          church_name:this.state.church_name3,
+          contact_phone:this.state.contact_phone3,
+          church_address:this.state.church_address3,
+          communion_date:this.state.communion_date,
+          officiant:this.state.officiant3,
+      }
+        }, () => {
+      console.log("communion_table",this.state.communion_table)
+      fetch("/editfirstcommunion/"+this.state.com_id, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.communion_table)
+      })
+      // .then(res => res.json())
+      .then((id) => 
+         {this.props.history.push('/');
+          this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
+      )
+      .catch(err => {
+        console.log(err);
+        alert('Error logging in please try again - onsubmitcom');
+      });
+      });
+      }
+    }else{
+      console.log("need add new row")
+      if (this.state.communion_date == 'Invalid date' || this.state.communion_date == ''){
+        this.setState({
+          communion_table: {
+          members_id:this.state.members_id,
+          church_name:this.state.church_name3,
+          contact_phone:this.state.contact_phone3,
+          church_address:this.state.church_address3,
+          communion_date:null,
+          officiant:this.state.officiant3,
+      }
+        }, () => {
+      console.log("communion_table",this.state.communion_table)
+      fetch("/addfirstcommunion", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.communion_table)
+      })
+      // .then(res => res.json())
+      .then((id) => 
+         {this.props.history.push('/');
+          this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
+      )
+      .catch(err => {
+        console.log(err);
+        alert('Error logging in please try again - oneditcom');
+      });
+      });
+      }else{
+        this.setState({
+          communion_table: {
+          members_id:this.state.members_id,
+          church_name:this.state.church_name3,
+          contact_phone:this.state.contact_phone3,
+          church_address:this.state.church_address3,
+          communion_date:this.state.communion_date,
+          officiant:this.state.officiant3,
+      }
+        }, () => {
+      console.log("communion_table",this.state.communion_table)
+      fetch("/addfirstcommunion", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.communion_table)
+      })
+      // .then(res => res.json())
+      .then((id) => 
+         {this.props.history.push('/');
+          this.props.history.push('/editMember/'+this.state.members_id+'/sacrament');} // Warning: Expected `onClick` listener to be a function, instead got a value of `object` type
+      )
+      .catch(err => {
+        console.log(err);
+        alert('Error logging in please try again - oneditcom');
+      });
+      });
+      }
+    }
+  } // need change
 
 
   render() {
@@ -845,6 +1002,13 @@ export default class Sacrament extends Component {
       }else{
         conf_date = <label>{this.state.confirmation_date}</label>
       }
+      let com_date;
+      if (this.state.communion_date == 'Invalid date'){
+        com_date = <label></label>
+      }else{
+        com_date = <label>{this.state.communion_date}</label>
+      }
+
       //if this member has baptism info, show the bap_form
       let bap_form;
       if (this.state.show_baptism == true){
@@ -904,7 +1068,7 @@ export default class Sacrament extends Component {
             <Col xs={3.5}/>
             </Row>
 
-            <Row around="xs">
+            {/* <Row around="xs">
             <Col xs={1} />
             <Col xs={6}>
             <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
@@ -923,7 +1087,7 @@ export default class Sacrament extends Component {
             </div>
             </Col>
             <Col xs={5}/>
-            </Row>
+            </Row> */}
            </div>     
       }else{
         bap_form = null;
@@ -1000,21 +1164,21 @@ export default class Sacrament extends Component {
              </Col>
      
              <Col xs={3.5}>
-             <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+             {/* <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
                <label>Marriage Certificate:</label>
              </div>
              <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
                  <a href={this.state.marriage_certificate} target = "_blank" >View Document</a>
-             </div>
+             </div> */}
              </Col>
      
              <Col xs={3.5}>
-             <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+             {/* <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
                <label>Baptismal Certificate:</label>
              </div>
              <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
                  <a href={this.state.baptismal_certificate} target = "_blank" >View Document</a>
-             </div>
+             </div> */}
              </Col>
              </Row>
             
@@ -1144,6 +1308,69 @@ export default class Sacrament extends Component {
       }else{
         con_form = null;
       }
+
+      let com_form;
+      if (this.state.show_first_communion == true){
+          com_form =  <div>
+          <div style={{marginTop:40,textAlign:'center'}}>
+         <h2>First Communion</h2>
+         </div>
+         <Row around="xs">
+           <Col xs={1} />
+           <Col xs={3.5}>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+             <label>Church Name:</label>
+           </div>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+               <label>{this.state.church_name3}</label>
+           </div>
+           </Col>
+   
+           <Col xs={3.5}>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+             <label>Contact Phone:</label>
+           </div>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+               <label>{this.state.contact_phone3}</label>
+           </div>
+           </Col>
+   
+           <Col xs={3.5}>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+             <label>Church Address:</label>
+           </div>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+               <label>{this.state.church_address3}</label>
+           </div>
+           </Col>
+           </Row>
+   
+           <Row around="xs">
+           <Col xs={1} />
+           <Col xs={3.5}>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+             <label>Communion Date:</label>
+           </div>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+               {com_date}
+           </div>
+           </Col>
+   
+           <Col xs={3.5}>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+             <label>Officiant:</label>
+           </div>
+           <div style={{width:160,textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+               <label>{this.state.officiant3}</label>
+           </div>
+           </Col>
+   
+           <Col xs={3.5}/>
+           </Row>
+          </div>    
+      }else{
+        com_form = null;
+      }
       
     return (
       <div>
@@ -1152,27 +1379,32 @@ export default class Sacrament extends Component {
       </div>
       <Row around="xs">
         <Col xs={1} />
-        <Col xs={2.5}>
+        <Col xs={2}>
         <div style={{textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
             <button type="button" onClick={this.toggleBap} style={{width:160,height:30}}>Baptism</button>
         </div>
         </Col>
 
-        <Col xs={2.5}>
+        <Col xs={2}>
         <div style={{textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
             <button type="button" onClick={this.toggleMar} style={{width:160,height:30}}>Current Marriage</button>
         </div>
         </Col>
 
-        <Col xs={2.5}>
+        <Col xs={2}>
         <div style={{textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
             <button type="button" onClick={this.togglePreMar} style={{width:160,height:30}}>Previous Marriage</button>
         </div>
         </Col>
 
-        <Col xs={2.5}>
+        <Col xs={2}>
         <div style={{textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
             <button type="button" onClick={this.toggleCon} style={{width:160,height:30}}>Confirmation</button>
+        </div>
+        </Col>
+        <Col xs={2}>
+        <div style={{textAlign:'left',float: 'left',marginTop:20,marginLeft:0}}>
+            <button type="button" onClick={this.toggleCom} style={{width:160,height:30}}>First Communion</button>
         </div>
         </Col>
         </Row>
@@ -1181,6 +1413,7 @@ export default class Sacrament extends Component {
       {mar_form}
       {premar_form}
       {con_form}
+      {com_form}
       <div style={{height:60}} />
       {/* the modal (popup) for add/edit baptism */}
         <Modal open={this.state.isOpenBap} onClose={this.toggleBap} center>
@@ -1253,12 +1486,12 @@ export default class Sacrament extends Component {
           style={{height:20, padding:4}}
         />
         </div>
-        <div style={{float: 'left',marginTop:17,marginLeft:30}}>
+        {/* <div style={{float: 'left',marginTop:17,marginLeft:30}}>
               <input 
                 type="file" 
                 onChange={ (e) => this.setState({baptism_certificate: URL.createObjectURL(e.target.files[0])}) } 
               />
-        </div>
+        </div> */}
         </div>
 
         <div style={{clear:'both', marginTop:50,marginBottom:10}}>
@@ -1440,6 +1673,88 @@ export default class Sacrament extends Component {
         </div>
         </form>
         </Modal>
+      {/* the modal (popup) for add/edit confirmation */}
+      <Modal open={this.state.isOpenCom} onClose={this.toggleCom} center>
+      <form onSubmit={this.onSubmitCom} style={{marginTop:0}}>
+        <h3>First Communion</h3>
+        <div style={{clear:'both', marginTop:0}}>
+        <div style={{width:140,float: 'left',marginTop:20,marginLeft:0}}>
+          <label>Church Name</label>
+        </div>
+        <div style={{float: 'left',marginTop:15}}>
+        <input
+          type="text"
+          name="church_name"
+          value={this.state.church_name3}
+          onChange={e => this.setState({ church_name3: e.target.value})}
+          style={{height:20, padding:4}}
+        />
+        </div>
+        <div style={{width:200,float: 'left',marginTop:20,marginLeft:30}}>
+          <label>Contact Phone</label>
+        </div>
+        <div style={{float: 'left',marginTop:15}}>
+        <input
+          type="text"
+          name="contact_phone"
+          value={this.state.contact_phone3}
+          onChange={e => this.setState({ contact_phone3: e.target.value})}
+          style={{height:20, padding:4}}
+        />
+        </div>
+        </div>
+
+        <div style={{clear:'both', marginTop:0}}>
+        <div style={{width:140,float: 'left',marginTop:20,marginLeft:0}}>
+          <label>Church Address</label>
+        </div>
+        <div style={{float: 'left',marginTop:15}}>
+        <input
+          type="text"
+          name="church_address"
+          value={this.state.church_address3}
+          onChange={e => this.setState({ church_address3: e.target.value})}
+          style={{height:20, padding:4}}
+        />
+        </div>
+        <div style={{width:200,float: 'left',marginTop:20,marginLeft:30}}>
+          <label>Communion Date</label>
+        </div>
+        <div style={{float: 'left',marginTop:15}}>
+        <input
+          type="date"
+          name="baptism_date"
+          value={this.state.communion_date}
+          onChange={e => this.setState({ communion_date: e.target.value})}
+          style={{width:163,height:20, padding:4}}
+        />
+        </div>
+        </div>
+
+        <div style={{clear:'both', marginTop:0}}>
+        <div style={{width:140,float: 'left',marginTop:20,marginLeft:0}}>
+          <label>Officiant</label>
+        </div>
+        <div style={{float: 'left',marginTop:15}}>
+        <input
+          type="text"
+          name="denomination"
+          value={this.state.officiant3}
+          onChange={e => this.setState({ officiant3: e.target.value})}
+          style={{height:20, padding:4}}
+        />
+        </div>
+        
+        </div>
+
+        <div style={{clear:'both', marginTop:50,marginBottom:10}}>
+
+        <div style={{float: 'right',marginTop:15,marginLeft:40}}>
+            <button style={{width:130,height:30}}>Save</button>
+        </div>
+        </div>
+        </form>
+        </Modal> 
       {/* the modal (popup) for add prior marriage*/}
         <Modal open={this.state.isOpenPreMar} onClose={this.togglePreMar} center>
         <form onSubmit={this.onSubmitPreMar} style={{marginTop:0}}>
