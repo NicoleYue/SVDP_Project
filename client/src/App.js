@@ -12,19 +12,24 @@ import MemberReport from './components/memberReport';
 import Notification from './components/notification';
 import CommunicationReport from './components/CommunicationReport';
 import Sacrament from './components/sacrament';
+
 function App(props) {
+
   //useState is to enable developers to use state without writing a class
   const [isOpen, setIsOpen] = useState(false); 
+
   //The function to logout the user account
   function logout(e){
     fakeAuth.signout();
     setIsOpen(!isOpen);
   }
+
   //close the menu after user click on an item in the menu
   function close(e){
     console.log(isOpen)
     setIsOpen(!isOpen);
   }
+  
   //PrivateRoute is to make the web page unavliable for user who did not login
   function PrivateRoute({ component: Component, ...rest }) {
     console.log('compare',fakeAuth.isAuthenticated)

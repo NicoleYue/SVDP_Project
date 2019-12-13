@@ -62,7 +62,7 @@ export default class Member extends Component {
     }
   };
 
-handleInputChange = (event) => {
+  handleInputChange = (event) => {
     const { value, name } = event.target;
     console.log("1",name, value)
     this.setState({
@@ -71,10 +71,6 @@ handleInputChange = (event) => {
       console.log("2",name,value)
   });
   }
-
-// changeFirstName = (event) =>{
-//   this.setState({first_name:event.target.value})
-// }
 
   onSubmit = (event) => {
   }
